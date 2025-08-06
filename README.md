@@ -29,7 +29,6 @@ Each model undergoes feature selection using either:
 - **SelectFromModel** for tree-based models
 
 
-
 ---
 
 ## 📁 Project Structure
@@ -44,6 +43,20 @@ Each model undergoes feature selection using either:
 ├── README.md             # Project documentation
 ```
 
+---
+
+### 🧹 Dropped Features Before Training
+
+Certain features were dropped prior to model training due to the following reasons:
+
+| Feature         | Reason for Dropping                                      |
+|-----------------|----------------------------------------------------------|
+| `id`            | Unique identifier; no predictive value                   |
+| `date`          | Timestamp of sale; not useful without temporal modeling  |
+| `sqft_basement` | Highly correlated with `sqft_living` and `sqft_above`    |
+| `yr_renovated`  | Mostly zeros; sparse and not informative                 |
+
+These features either introduced noise, redundancy, or lacked meaningful variance. Dropping them improved model interpretability and reduced overfitting risk.
 
 ---
 
@@ -120,7 +133,6 @@ This will:
 | scalers/ | Scalers used for each model | 
 | features/ | Selected features and feature order per model | 
 | best_model_summary.json | Summary of top-performing model | 
-
 
 
 ⚠️ Notes
