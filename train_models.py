@@ -11,6 +11,10 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
 from xgboost import XGBRegressor
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import TensorDataset, DataLoader
 from sklearn.feature_selection import RFE, SelectFromModel
 from sklearn.metrics import mean_absolute_error , mean_squared_error, r2_score
 import seaborn as sns
@@ -20,6 +24,21 @@ import json
 import os
 import warnings
 warnings.filterwarnings("ignore")
+
+
+class HousePriceNet(nn.Module):
+    def __init__(self, input_dim):
+        super(HousePriceNet, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(input_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Linear(64, 1)
+        )
+
+    def forward(self, x):
+        return self.model(x)
 
 
 #-------------------------------TASK 1: LOAD & CLEAN DATA------------------------------#
@@ -95,14 +114,6 @@ x_train , x_test , y_train , y_test = train_test_split(X, y, random_state=100, t
 print(f'X_train shape: {x_train.shape},  X_test shape: {x_test.shape}')
 print(f'y_train shape: {y_train.shape},  y_test shape: {y_test.shape}')
 
-# # Initialize and fit the scaler on the training data
-# scaler = StandardScaler()
-# scaler.fit(x_train)
-
-# # Transform both training and test data
-# X_train_scaled = scaler.transform(x_train)
-# X_test_scaled = scaler.transform(x_test)
-
 features = list(x_train.columns)
 target = 'price'
 
@@ -129,7 +140,7 @@ models = {
             "min_samples_split": [2, 5]
         }
     },
-    "SVM": {
+    "Svm": {
         "model": SVR(),
         "params": {
             "C": [0.1, 1, 10],
@@ -137,8 +148,11 @@ models = {
             "gamma": ["scale", "auto"]
         }
     },
-    "XGBoost": {
-        "model": XGBRegressor(verbosity=0),
+    "Xgboost": {
+        # tree_method='gpu_hist': Uses GPU-accelerated histogram-based algorithm.
+        # predictor='gpu_predictor': Ensures prediction also runs on GPU.
+
+        "model": XGBRegressor(tree_method='gpu_hist', predictor='gpu_predictor', verbosity=0),
         "params": {
             "n_estimators": [100, 200],
             "max_depth": [3, 6],
@@ -146,14 +160,14 @@ models = {
             "subsample": [0.7, 1.0]
         }
     },
-    "Neural Network": {
-        "model": MLPRegressor(max_iter=2000, early_stopping=True, validation_fraction=0.1),
-        "params": {
-            "hidden_layer_sizes": [(64,), (128,), (64, 64)],
-            "activation": ["relu", "tanh"],
-            "learning_rate_init": [0.001, 0.005, 0.01]
-        }
-    }
+    # "Neural Network": {
+    #     "model": MLPRegressor(max_iter=2000, early_stopping=True, validation_fraction=0.1),
+    #     "params": {
+    #         "hidden_layer_sizes": [(64,), (128,), (64, 64)],
+    #         "activation": ["relu", "tanh"],
+    #         "learning_rate_init": [0.001, 0.005, 0.01]
+    #     }
+    # }
 }
 
 
@@ -170,7 +184,7 @@ def select_features(name, model, x_tr, y_tr, x_te):
         x_te_fs = rfe.transform(x_te)
         selected_features = [f for f, s in zip(features, rfe.support_) if s]
 
-    elif name in ["Random Forest", "XGBoost"]:
+    elif name in ["Random Forest", "Xgboost"]:
         model.fit(x_tr, y_tr)
         sfm = SelectFromModel(model, threshold="median")
         sfm.fit(x_tr, y_tr)
@@ -192,10 +206,27 @@ selected_feature_sets = {}
 # Create the folder if it doesn't exist
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(features_dir, exist_ok=True)
+os.makedirs(scaler_dir, exist_ok=True)
 
 # Remove all files in the folder
 for filename in os.listdir(model_dir):
     file_path = os.path.join(model_dir, filename)
+    try:
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+    except Exception as e:
+        print(f"Error deleting file {file_path}: {e}")
+
+for filename in os.listdir(features_dir):
+    file_path = os.path.join(features_dir, filename)
+    try:
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+    except Exception as e:
+        print(f"Error deleting file {file_path}: {e}")
+
+for filename in os.listdir(scaler_dir):
+    file_path = os.path.join(scaler_dir, filename)
     try:
         if os.path.isfile(file_path):
             os.remove(file_path)
@@ -239,6 +270,82 @@ for name, config in tqdm(models.items(), desc="Training Models", unit="model"):
         "R2 Score": r2_score(y_test, y_pred),
         "Selected Features": selected
     }
+
+#----------------------TASK 6B: TRAIN NEURAL NETWORK VIA GPU--------------------------#
+
+print("\nTraining Neural Network...")
+
+name = "Neural Network"
+
+# Use all features for PyTorch model (no feature selection)
+selected_feature_sets[name] = features
+
+# Scale input features
+scaler_nn = StandardScaler()
+x_train_scaled_nn = scaler_nn.fit_transform(x_train)
+x_test_scaled_nn = scaler_nn.transform(x_test)
+
+# Scale target variable
+y_train_scaled = scaler_nn.fit_transform(y_train.values.reshape(-1, 1))
+y_test_scaled = scaler_nn.transform(y_test.values.reshape(-1, 1))
+
+# Save scaler
+joblib.dump(scaler_nn, f"{scaler_dir}/{name.replace(' ', '_')}_scaler.pkl")
+
+# Convert to PyTorch tensors
+x_train_tensor = torch.tensor(x_train_scaled_nn, dtype=torch.float32)
+y_train_tensor = torch.tensor(y_train_scaled, dtype=torch.float32)
+x_test_tensor = torch.tensor(x_test_scaled_nn, dtype=torch.float32)
+y_test_tensor = torch.tensor(y_test_scaled, dtype=torch.float32)
+
+# Create DataLoader
+train_dataset = TensorDataset(x_train_tensor, y_train_tensor)
+train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+
+# Use GPU if available
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Initialize model
+model_nn = HousePriceNet(x_train_tensor.shape[1]).to(device)
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model_nn.parameters(), lr=0.001)
+
+# Training loop
+for epoch in range(100):
+    model_nn.train()
+    running_loss = 0.0
+    for batch_x, batch_y in train_loader:
+        batch_x, batch_y = batch_x.to(device), batch_y.to(device)
+        optimizer.zero_grad()
+        outputs = model_nn(batch_x)
+        loss = criterion(outputs, batch_y)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+    if epoch % 10 == 0:
+        print(f"Epoch {epoch}, Loss: {running_loss:.4f}")
+
+# Evaluation
+model_nn.eval()
+with torch.no_grad():
+    predictions_scaled = model_nn(x_test_tensor.to(device)).cpu().numpy()
+    predictions = scaler_nn.inverse_transform(predictions_scaled)
+
+    mae = mean_absolute_error(y_test, predictions)
+    mse = mean_squared_error(y_test, predictions)
+    rmse = np.sqrt(mse)
+    r2 = r2_score(y_test, predictions)
+
+# Append results
+results[name] = {
+    "Best Parameters": {"hidden_layer_sizes": [128, 64], "activation": "ReLU", "optimizer": "Adam", "lr": 0.001},
+    "MAE": mae,
+    "MSE": mse,
+    "RMSE": rmse,
+    "R2 Score": r2,
+    "Selected Features": features
+}
+
 
 # Display results at the end
 for model_name, res in results.items():
