@@ -1,12 +1,12 @@
 # 🏡 House Price Prediction
 
-This project builds and evaluates multiple machine learning models to predict house prices based on various features. It includes data preprocessing, feature selection, hyperparameter tuning, and model evaluation. The best-performing model is saved for future use.
+This project builds and evaluates multiple machine learning models to predict house prices based on various features. It includes data preprocessing, feature selection, hyperparameter tuning, and model evaluation. The best performing combination for each model is saved and later used for prediction via React UI.
 
 - **Data preprocessing**: cleaning, scaling, and feature selection
 - **Model training**: using six different regression algorithms
 - **Hyperparameter tuning**: via `GridSearchCV` with cross-validation
 - **Evaluation**: using MAE, MSE, RMSE, and R² Score
-- **Model saving**: best models, scalers, and selected features are saved for future use
+- **Model saving**: best models, scalers, and selected features are saved for predictions through React UI
 
 ### 🔍 Models Used
 
