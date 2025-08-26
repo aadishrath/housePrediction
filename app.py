@@ -38,7 +38,6 @@ def get_sample_input(model):
     sample_row = df.sample(1).iloc[0]
 
     # Extract only the selected features
-    # sample_input = {feature: sample_row[feature].item() for feature in selected_features if feature in sample_row}
     sample_input = {
         feature: sample_row[feature].item() if hasattr(sample_row[feature], 'item') else sample_row[feature]
         for feature in selected_features if feature in sample_row
