@@ -11,7 +11,7 @@ class About extends Component {
 
         <h2>🔧 How It Works</h2>
         <p>
-          It all starts with you. Choose a prediction model from the dropdown, enter your property details — square footage, bedrooms, location, and more — and let the app do the rest. Behind the scenes, your inputs are sent to a Flask-powered backend, which loads a trained model and returns a price estimate in seconds.
+          It all starts with you. Choose a prediction model from the dropdown, enter your property details — square footage, bedrooms, location, and more — and let the app do the rest. Or if you prefer to save time, click on 'Use Sample Input' which will populate the fields. Then click on submit to get a prediction and chart comparison. Behind the scenes, your inputs are sent to a Flask-powered backend, which loads a trained model and returns a price estimate in seconds.
         </p>
 
         <h2>🧠 Machine Learning Models</h2>
@@ -21,7 +21,7 @@ class About extends Component {
 
         <h2>🎨 Frontend Experience</h2>
         <p>
-          Built with React (yes, the class-based kind), the frontend is designed to be intuitive and responsive. The form adapts to your chosen model, sample inputs help guide you, and the chart gives you a visual comparison of your prediction against similar homes. It’s not just functional — it’s friendly.
+          Built with React (yes, the class-based kind), the frontend is designed to be intuitive and responsive. The form adapts to your chosen model, sample inputs help guide you, and the chart gives you a visual comparison of your prediction against similar homes.
         </p>
 
         <h2>📦 Backend Architecture</h2>
@@ -31,7 +31,7 @@ class About extends Component {
 
         <h2>🚀 Why This Project Matters</h2>
         <p>
-          This isn’t just a demo — it’s a full-stack showcase of how machine learning can be woven into real-world applications. It brings together data science, API design, frontend development, and user experience in one cohesive package. Whether you're building your portfolio or just exploring, there's something here for you.
+          This isn’t just a demo — it’s a full-stack showcase of how machine learning can be woven into real-world applications. It brings together data science, API design, frontend development, and user experience in one cohesive package.
         </p>
 
         <h2>📁 Technologies Used</h2>
