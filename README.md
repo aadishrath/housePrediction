@@ -34,13 +34,15 @@ Each model undergoes feature selection using either:
 ## 📁 Project Structure
 
 ```
+├── README.md             # Project documentation
 ├── house_data.csv        # Input dataset
 ├── requirements.txt      # Project libraries
-├── train_model.py        # Main training script 
+├── train_model.py        # Main training script
+├── app.py                # Flask script to setup backend for UI
 ├── models/               # Saved models and metadata 
 ├── scalers/              # Saved scalers per model 
 ├── features/             # Selected features and feature order 
-├── README.md             # Project documentation
+├── react-ui/             # Interactive UI for user
 ```
 
 ---
@@ -108,14 +110,16 @@ The dataset contains housing features and sale prices. Key input features includ
 ---
 
 ## 🛠️ Setup Instructions
+Must follow all steps in order. 3 terminal windows will be used here.
 
 ### 1. Install Dependencies
-
+Open a terminal and run
 ```
 pip install -r requirements.txt
 ```
 
 ### 2. Run Training Script
+In same terminal run
 ```
 python train_model.py
 ```
@@ -123,7 +127,32 @@ This will:
 - Load and clean the dataset
 - Visualize distributions and correlations
 - Train and evaluate all models
-- Save models, scalers, and selected features
+- Save models, scalers, and selected features in respective directories
+
+### 3. Run Backend Script
+Open new terminal and run
+```
+python app.py
+```
+This will:
+- Setup backend
+- Load trained models and selected features for each model
+
+### 4. Run UI Script
+Must open new terminal and run
+```
+npm install  # install packages required for UI
+```
+```
+cd react-ui
+```
+```
+npm run dev  # boot up UI locally
+```
+This will:
+- Boot up local UI on http://localhost:5173/. Open this URL on a browser
+- Click on 'About' in top bar to see, how to use the UI and get a prediction
+---
 
 📂 Output Files
 
@@ -136,6 +165,8 @@ This will:
 
 
 ⚠️ Notes
-- Missing values are imputed using column means.
+- Missing values are imputed using column mean.
 - Feature selection is model-specific.
 - Ensure consistent feature ordering during prediction using saved metadata.
+- If browser console shows 500 error, it most likely means python file in Step 3 is not running in parallel to UI.
+- if browser console shows 404 error for model selection, it most likely means python file in Step 2 was not executed. Follow steps in order.
