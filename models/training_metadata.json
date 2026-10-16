@@ -1,0 +1,60 @@
+{
+  "source_file": "house_data_new.csv",
+  "source_url": "https://www.kaggle.com/datasets/ahmedshahriarsakib/usa-real-estate-dataset",
+  "raw_columns": [
+    "brokered_by",
+    "status",
+    "price",
+    "bed",
+    "bath",
+    "acre_lot",
+    "street",
+    "city",
+    "state",
+    "zip_code",
+    "house_size",
+    "prev_sold_date"
+  ],
+  "features": [
+    "status",
+    "bed",
+    "bath",
+    "house_size",
+    "acre_lot",
+    "state",
+    "city",
+    "zip_code"
+  ],
+  "numeric_features": [
+    "bed",
+    "bath",
+    "house_size",
+    "acre_lot"
+  ],
+  "categorical_features": [
+    "status",
+    "state",
+    "city",
+    "zip_code"
+  ],
+  "rows_raw": 2226382,
+  "rows_used": 2201789,
+  "deployment_training_rows": 2201789,
+  "rows_excluded": 24593,
+  "status_counts": {
+    "for_sale": 1369191,
+    "sold": 808152,
+    "ready_to_build": 24446
+  },
+  "target_definition": "price conditioned on status: sold=completed sale price; for_sale and ready_to_build=asking/list price",
+  "price_filter_usd": [
+    10000,
+    100000000
+  ],
+  "validation_fraction": 0.2,
+  "validation_split": "random stratified holdout by status; not a time-based or geographic external validation",
+  "random_state": 42,
+  "target_transform": "log1p",
+  "gpu_available": true,
+  "note": "The source has no current observation date; predictions are status-conditioned dataset estimates, not current appraisals."
+}

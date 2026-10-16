@@ -1,172 +1,96 @@
-# 🏡 House Price Prediction
+# AdiReality
 
-This project builds and evaluates multiple machine learning models to predict house prices based on various features. It includes data preprocessing, feature selection, hyperparameter tuning, and model evaluation. The best performing combination for each model is saved and later used for prediction via React UI.
+AdiReality is a React and Flask application that estimates a home's observed price from property details entered in the UI. It uses the project's national Realtor listing dataset as its sole training source. It does not create a month-by-month market trend.
 
-- **Data preprocessing**: cleaning, scaling, and feature selection
-- **Model training**: using six different regression algorithms
-- **Hyperparameter tuning**: via `GridSearchCV` with cross-validation
-- **Evaluation**: using MAE, MSE, RMSE, and R² Score
-- **Model saving**: best models, scalers, and selected features are saved for predictions through React UI
+## Price target and status
 
-### 🔍 Models Used
+The dataset's `price` column is status-dependent:
 
-The following models are trained and tuned:
+- `sold`: completed sale price.
+- `for_sale`: asking/list price.
+- `ready_to_build`: asking/list price for a build-ready property.
 
-- **Linear Regression**: baseline model with no hyperparameters
-- **Decision Tree Regressor** (labeled as "Ridge Regression"):
-  - `max_depth`, `min_samples_split`
-- **Random Forest Regressor**:
-  - `n_estimators`, `max_depth`, `min_samples_split`
-- **Support Vector Machine (SVR)**:
-  - `C`, `kernel`, `gamma`
-- **XGBoost Regressor**:
-  - `n_estimators`, `max_depth`, `learning_rate`, `subsample`
-- **Neural Network (MLPRegressor)**:
-  - `hidden_layer_sizes`, `activation`, `learning_rate_init`
+The form includes **Price context** and the selected status is a model feature. All valid rows from all three statuses are used for model fitting, with status allowing the model to learn which kind of observed price is being estimated. Asking price is not a confirmed transaction price. Since this source snapshot has no reliable current observation date, the result is not an estimate of today's market value.
 
-Each model undergoes feature selection using either:
-- **Recursive Feature Elimination (RFE)** for linear models
-- **SelectFromModel** for tree-based models
+## Data and feature choices
 
+Place the Kaggle source file at `house_data_new.csv` in the repository root. The 179 MB dataset is intentionally local and ignored by Git; the app does not fetch millions of records from an API on every request.
 
----
+Raw columns: `brokered_by`, `status`, `price`, `bed`, `bath`, `acre_lot`, `street`, `city`, `state`, `zip_code`, `house_size`, and `prev_sold_date`.
 
-## 📁 Project Structure
+Model inputs:
 
-```
-├── README.md             # Project documentation
-├── house_data.csv        # Input dataset
-├── requirements.txt      # Project libraries
-├── train_model.py        # Main training script
-├── app.py                # Flask script to setup backend for UI
-├── models/               # Saved models and metadata 
-├── scalers/              # Saved scalers per model 
-├── features/             # Selected features and feature order 
-├── react-ui/             # Interactive UI for user
-```
+| Input | Reason |
+| --- | --- |
+| `status` | Defines completed-sale versus asking-price target semantics. |
+| `bed`, `bath` | Basic property layout. |
+| `house_size`, `acre_lot` | Interior and land size. |
+| `state`, `city`, `zip_code` | Geographic price context. |
 
----
+Excluded columns:
 
-### 🧹 Dropped Features Before Training
+| Column | Reason |
+| --- | --- |
+| `price` | Prediction target. |
+| `brokered_by` | Broker/agent identifier; not a portable property attribute. |
+| `street` | High-cardinality address/record identifier and not needed in the user form. |
+| `prev_sold_date` | Not the current listing/sale observation date, incomplete, and contains invalid values. |
 
-Certain features were dropped prior to model training due to the following reasons:
+Training retains known status, price, and geography records with prices from $10,000 through $100,000,000. It excludes invalid geography and implausible numeric measurements (`bed`/`bath` over 30, home size over 50,000 sq ft, or lot size over 1,000 acres). Missing room/area values are retained and imputed within model training; this is especially useful for `ready_to_build` records. ZIP codes are treated as strings. City, state, ZIP, and status use cross-fitted target encoding, avoiding a huge one-hot matrix and leakage from a row's own target into its training encoding.
 
-| Feature         | Reason for Dropping                                      |
-|-----------------|----------------------------------------------------------|
-| `id`            | Unique identifier; no predictive value                   |
-| `date`          | Timestamp of sale; not useful without temporal modeling  |
-| `sqft_basement` | Highly correlated with `sqft_living` and `sqft_above`    |
-| `yr_renovated`  | Mostly zeros; sparse and not informative                 |
+## Models and evaluation
 
-These features either introduced noise, redundancy, or lacked meaningful variance. Dropping them improved model interpretability and reduced overfitting risk.
+The training script compares Linear Regression (baseline), Linear SVR, a PyTorch neural network, histogram gradient boosting, random forest, and XGBoost on the same random 80/20 holdout, stratified by status. Linear SVR uses an epsilon-insensitive SGD solver, which scales to millions of rows. After comparison, it refits every saved prediction model on **all retained rows**, so the holdout is used for evaluation only and no records are reserved from the deployed models. All models learn log-transformed prices; linear, SVR, and neural models use scaled inputs. The neural network and XGBoost use CUDA when available and fall back to CPU; saved artifacts run on CPU for portable inference. The default model is the one with the lowest holdout MAE.
 
----
+Reported metrics include R², MAE, median absolute error, RMSE, MAPE, mean error, and an 80% absolute-error radius. Since the source has no reliable observation timestamp, the holdout is not time-based. It tests generalization to a random subset of this dataset snapshot, not future market conditions or geographic regions absent from training. Overall scores combine the three status groups, which can have different error profiles.
 
-## 📊 Dataset
+## Project structure
 
-The dataset contains housing features and sale prices. Key input features include:
+- `house_data_new.csv` — local training dataset (ignored by Git)
+- `train_models.py`, `model_components.py` — quality filtering, preprocessing, six model candidates, evaluation, and the serializable neural-network estimator
+- `app.py` — Flask API, input validation, and inference
+- `features/input_schema.json` — generated UI controls and validation rules
+- `features/selected_features.json` — model input columns
+- `features/modeling_notes.json` — included/excluded feature explanations
+- `models/` — trained model artifacts, metrics, and training metadata
+- `react-ui/` — React interface and model comparison
 
-- `bedrooms`, `bathrooms`, `floors`, `waterfront`, `view`, `condition`, `grade`
-- `yr_built`, `lat`, `long`, `sqft_living`, `sqft_lot`, `zipcode`, etc.
-- `price` (target variable)
+## Setup and run
 
----
+Use Python 3.10–3.12 and Node.js 20 or newer. Install dependencies:
 
-## 🧠 Models Trained
-
-| Model            | R² Score | RMSE       | MAE        | Best Parameters |
-|------------------|----------|------------|------------|------------------|
-| Linear Regression | 0.634    | 222,106    | 134,890    | —                |
-| Ridge Regression  | 0.780    | 172,272    | 90,299     | `max_depth=10`, `min_samples_split=20` |
-| Random Forest     | **0.884**| **125,005**| **71,291** | `n_estimators=100`, `max_depth=None`, `min_samples_split=5` |
-| SVM               | 0.505    | 258,194    | 135,032    | `C=10`, `kernel=linear`, `gamma=scale` |
-| XGBoost           | 0.867    | 133,653    | 71,808     | `learning_rate=0.05`, `max_depth=6`, `n_estimators=200`, `subsample=1.0` |
-| Neural Network    | 0.882    | 125,841    | 75,333     | `activation=relu`, `hidden_layer_sizes=(64,64)`, `learning_rate_init=0.005` |
-
----
-
-## 🏆 Best Performing Model
-
-**Random Forest Regressor**
-
-- **R² Score**: 0.8841
-- **RMSE**: 125,004.83
-- **MAE**: 71,291.23
-- **Best Parameters**:
-  - `n_estimators`: 100
-  - `max_depth`: None
-  - `min_samples_split`: 5
-- **Selected Features**:
-  - `sqft_living`
-  - `waterfront`
-  - `grade`
-  - `sqft_above`
-  - `yr_built`
-  - `zipcode`
-  - `lat`
-  - `long`
-  - `sqft_living15`
-
----
-
-## 🛠️ Setup Instructions
-Must follow all steps in order. 3 terminal windows will be used here.
-
-### 1. Install Dependencies
-Open a terminal and run
-```
-pip install -r requirements.txt
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+cd react-ui
+npm install
+cd ..
 ```
 
-### 2. Run Training Script
-In same terminal run
-```
-python train_model.py
-```
-This will:
-- Load and clean the dataset
-- Visualize distributions and correlations
-- Train and evaluate all models
-- Save models, scalers, and selected features in respective directories
+Retrain the models after placing/updating the local dataset:
 
-### 3. Run Backend Script
-Open new terminal and run
+```powershell
+python train_models.py
 ```
+
+Start the API and UI in separate terminals:
+
+```powershell
 python app.py
 ```
-This will:
-- Setup backend
-- Load trained models and selected features for each model
 
-### 4. Run UI Script
-Must open new terminal and run
-```
-npm install  # install packages required for UI
-```
-```
+```powershell
 cd react-ui
+npm run dev
 ```
-```
-npm run dev  # boot up UI locally
-```
-This will:
-- Boot up local UI on http://localhost:5173/. Open this URL on a browser
-- Click on 'About' in top bar to see, how to use the UI and get a prediction
----
 
-📂 Output Files
+Open Vite's local URL (usually `http://localhost:5173`). The development proxy forwards `/api` to Flask at `http://127.0.0.1:5000`.
 
-| Folder      | Contents          | 
-| ----------- | ----------------- |
-| models/ | Trained models (.pkl) and metadata | 
-| scalers/ | Scalers used for each model | 
-| features/ | Selected features and feature order per model | 
-| best_model_summary.json | Summary of top-performing model | 
+## Limitations
 
-
-⚠️ Notes
-- Missing values are imputed using column mean.
-- Feature selection is model-specific.
-- Ensure consistent feature ordering during prediction using saved metadata.
-- If browser console shows 500 error, it most likely means python file in Step 3 is not running in parallel to UI.
-- if browser console shows 404 error for model selection, it most likely means python file in Step 2 was not executed. Follow steps in order.
+- The target is the dataset's recorded sale or asking price, selected by status; asking prices need not equal eventual sale prices.
+- There is no reliable current listing/sale observation date, so the model cannot establish a current valuation or price trend.
+- A random holdout score does not guarantee accuracy for a particular home, location, or price context.
+- Dataset records may be duplicated, stale, inaccurate, or unevenly distributed by market. The estimate is educational and is not an appraisal or offer.

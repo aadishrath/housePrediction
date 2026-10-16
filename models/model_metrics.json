@@ -1,0 +1,439 @@
+{
+  "Linear Regression": {
+    "mae": 256510.5234100263,
+    "median_ae": 74147.3504054253,
+    "mape": 0.5405232502202401,
+    "rmse": 2024472.7185442045,
+    "r2": -2.1541142801228443,
+    "mean_error": -23660.520913897803,
+    "validation_band_radius_80": 200459.3042840523,
+    "validation_band_coverage": 0.800003633407364,
+    "by_status": {
+      "for_sale": {
+        "mae": 312112.9886014687,
+        "median_ae": 76036.86815049655,
+        "mape": 0.620785205999779,
+        "rmse": 2408806.6066600513,
+        "r2": -2.2821547005909157,
+        "mean_error": -28853.7593562009,
+        "validation_band_radius_80": 220699.84195308964,
+        "validation_band_coverage": 0.8000058428706023
+      },
+      "ready_to_build": {
+        "mae": 124371.17520048872,
+        "median_ae": 90846.95889465848,
+        "mape": 0.2232661758069703,
+        "rmse": 186125.80302636174,
+        "r2": 0.4763923323317746,
+        "mean_error": -111722.62384196419,
+        "validation_band_radius_80": 184576.78224499157,
+        "validation_band_coverage": 0.8001636326447126
+      },
+      "sold": {
+        "mae": 166304.81664772326,
+        "median_ae": 70985.27552141045,
+        "mape": 0.4141384378392553,
+        "rmse": 1155294.2668220147,
+        "r2": -1.46768242075499,
+        "mean_error": -12198.353076176605,
+        "validation_band_radius_80": 174512.41732483945,
+        "validation_band_coverage": 0.8000074243183548
+      }
+    },
+    "training_device": "cpu",
+    "features": [
+      "status",
+      "bed",
+      "bath",
+      "house_size",
+      "acre_lot",
+      "state",
+      "city",
+      "zip_code"
+    ],
+    "best_parameters": {
+      "copy_X": true,
+      "fit_intercept": true,
+      "n_jobs": null,
+      "positive": false
+    }
+  },
+  "Linear SVR": {
+    "mae": 302029.2024162701,
+    "median_ae": 71346.43184677849,
+    "mape": 0.5786722416826663,
+    "rmse": 2869635.749902474,
+    "r2": -5.337341573844987,
+    "mean_error": 21529.82126235552,
+    "validation_band_radius_80": 197333.92192852357,
+    "validation_band_coverage": 0.800003633407364,
+    "by_status": {
+      "for_sale": {
+        "mae": 376757.7104602103,
+        "median_ae": 72934.63848048315,
+        "mape": 0.6701729536541788,
+        "rmse": 3413855.8481303444,
+        "r2": -5.592430159778444,
+        "mean_error": 34059.05452551079,
+        "validation_band_radius_80": 218366.1544681496,
+        "validation_band_coverage": 0.8000058428706023
+      },
+      "ready_to_build": {
+        "mae": 103003.87431024632,
+        "median_ae": 72889.41388438479,
+        "mape": 0.18991682956464323,
+        "rmse": 157385.91522756335,
+        "r2": 0.6256097272907684,
+        "mean_error": -75315.91286555259,
+        "validation_band_radius_80": 155226.6890583288,
+        "validation_band_coverage": 0.8001636326447126
+      },
+      "sold": {
+        "mae": 181442.98840641958,
+        "median_ae": 69047.17358496087,
+        "mape": 0.43540921197295746,
+        "rmse": 1639999.1041324628,
+        "r2": -3.972688473232612,
+        "mean_error": 3231.9614200939845,
+        "validation_band_radius_80": 171394.89550743293,
+        "validation_band_coverage": 0.8000074243183548
+      }
+    },
+    "training_device": "cpu",
+    "features": [
+      "status",
+      "bed",
+      "bath",
+      "house_size",
+      "acre_lot",
+      "state",
+      "city",
+      "zip_code"
+    ],
+    "best_parameters": {
+      "alpha": 0.0001,
+      "average": true,
+      "early_stopping": false,
+      "epsilon": 0.1,
+      "eta0": 0.01,
+      "fit_intercept": true,
+      "l1_ratio": 0.15,
+      "learning_rate": "invscaling",
+      "loss": "epsilon_insensitive",
+      "max_iter": 20,
+      "n_iter_no_change": 5,
+      "penalty": "l2",
+      "power_t": 0.25,
+      "random_state": 42,
+      "shuffle": true,
+      "tol": null,
+      "validation_fraction": 0.1,
+      "verbose": 0,
+      "warm_start": false
+    }
+  },
+  "Neural Network": {
+    "mae": 217263.625,
+    "median_ae": 67651.53125,
+    "mape": 0.45973581075668335,
+    "rmse": 1421418.375,
+    "r2": -0.5548818111419678,
+    "mean_error": -55972.03125,
+    "validation_band_radius_80": 184264.375,
+    "validation_band_coverage": 0.800003633407364,
+    "by_status": {
+      "for_sale": {
+        "mae": 260875.609375,
+        "median_ae": 70504.765625,
+        "mape": 0.537295401096344,
+        "rmse": 1692351.125,
+        "r2": -0.6200788021087646,
+        "mean_error": -67473.828125,
+        "validation_band_radius_80": 203516.0,
+        "validation_band_coverage": 0.8000058428706023
+      },
+      "ready_to_build": {
+        "mae": 97496.625,
+        "median_ae": 64743.21875,
+        "mape": 0.1861562281847,
+        "rmse": 168836.21875,
+        "r2": 0.5691519975662231,
+        "mean_error": -14066.83203125,
+        "validation_band_radius_80": 141333.3125,
+        "validation_band_coverage": 0.8001636326447126
+      },
+      "sold": {
+        "mae": 146998.140625,
+        "median_ae": 63567.75,
+        "mape": 0.3366084396839142,
+        "rmse": 807095.0625,
+        "r2": -0.20435214042663574,
+        "mean_error": -37753.00390625,
+        "validation_band_radius_80": 159693.234375,
+        "validation_band_coverage": 0.8000074243183548
+      }
+    },
+    "training_device": "cuda",
+    "features": [
+      "status",
+      "bed",
+      "bath",
+      "house_size",
+      "acre_lot",
+      "state",
+      "city",
+      "zip_code"
+    ],
+    "best_parameters": {
+      "batch_size": 16384,
+      "device": "cuda",
+      "epochs": 12,
+      "learning_rate": 0.002,
+      "random_state": 42
+    }
+  },
+  "Gradient Boosting": {
+    "mae": 176951.23196170575,
+    "median_ae": 61580.13608059722,
+    "mape": 0.3940309741715432,
+    "rmse": 808165.7514161747,
+    "r2": 0.4973630040422031,
+    "mean_error": -70267.32165193369,
+    "validation_band_radius_80": 169701.0334183696,
+    "validation_band_coverage": 0.800003633407364,
+    "by_status": {
+      "for_sale": {
+        "mae": 209692.70022347948,
+        "median_ae": 64735.32417240052,
+        "mape": 0.45267027894214873,
+        "rmse": 964270.2755583319,
+        "r2": 0.47403997321236846,
+        "mean_error": -93054.37053908949,
+        "validation_band_radius_80": 189673.82792505005,
+        "validation_band_coverage": 0.8000058428706023
+      },
+      "ready_to_build": {
+        "mae": 84702.23160859894,
+        "median_ae": 57686.99684364715,
+        "mape": 0.15433013344281632,
+        "rmse": 137940.00152398428,
+        "r2": 0.712410330569009,
+        "mean_error": -16847.793608110198,
+        "validation_band_radius_80": 120449.36201945954,
+        "validation_band_coverage": 0.8001636326447126
+      },
+      "sold": {
+        "mae": 124270.41687585432,
+        "median_ae": 57353.57462615261,
+        "mape": 0.3019337123254226,
+        "rmse": 451162.15036355256,
+        "r2": 0.6236695611683285,
+        "mean_error": -33276.94344135085,
+        "validation_band_radius_80": 144241.3014851479,
+        "validation_band_coverage": 0.8000074243183548
+      }
+    },
+    "training_device": "cpu",
+    "features": [
+      "status",
+      "bed",
+      "bath",
+      "house_size",
+      "acre_lot",
+      "state",
+      "city",
+      "zip_code"
+    ],
+    "best_parameters": {
+      "categorical_features": "warn",
+      "early_stopping": "auto",
+      "interaction_cst": null,
+      "l2_regularization": 3.0,
+      "learning_rate": 0.08,
+      "loss": "squared_error",
+      "max_bins": 255,
+      "max_depth": null,
+      "max_features": 1.0,
+      "max_iter": 120,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 20,
+      "monotonic_cst": null,
+      "n_iter_no_change": 10,
+      "quantile": null,
+      "random_state": 42,
+      "scoring": "loss",
+      "tol": 1e-07,
+      "validation_fraction": 0.1,
+      "verbose": 0,
+      "warm_start": false
+    }
+  },
+  "Random Forest": {
+    "mae": 172247.5897397457,
+    "median_ae": 60729.20423172346,
+    "mape": 0.38678283589573775,
+    "rmse": 766917.9665877796,
+    "r2": 0.5473616035475967,
+    "mean_error": -66438.90760116669,
+    "validation_band_radius_80": 166214.0249490805,
+    "validation_band_coverage": 0.800003633407364,
+    "by_status": {
+      "for_sale": {
+        "mae": 204168.96327809323,
+        "median_ae": 62869.16877123165,
+        "mape": 0.438100095899737,
+        "rmse": 918347.7157423533,
+        "r2": 0.5229438707777646,
+        "mean_error": -95516.43029080829,
+        "validation_band_radius_80": 186119.90000166674,
+        "validation_band_coverage": 0.8000058428706023
+      },
+      "ready_to_build": {
+        "mae": 77413.68313195622,
+        "median_ae": 52031.75733853498,
+        "mape": 0.14264250638226997,
+        "rmse": 121903.7305498865,
+        "r2": 0.7753911722295153,
+        "mean_error": -26916.026433656694,
+        "validation_band_radius_80": 115097.28942311183,
+        "validation_band_coverage": 0.8001636326447126
+      },
+      "sold": {
+        "mae": 121034.38114988047,
+        "median_ae": 57982.170945068996,
+        "mape": 0.30722499257370295,
+        "rmse": 416102.46599595464,
+        "r2": 0.6798860427351987,
+        "mean_error": -18370.75673742068,
+        "validation_band_radius_80": 142082.0374188121,
+        "validation_band_coverage": 0.8000074243183548
+      }
+    },
+    "training_device": "cpu",
+    "features": [
+      "status",
+      "bed",
+      "bath",
+      "house_size",
+      "acre_lot",
+      "state",
+      "city",
+      "zip_code"
+    ],
+    "best_parameters": {
+      "bootstrap": true,
+      "ccp_alpha": 0.0,
+      "criterion": "squared_error",
+      "max_depth": 14,
+      "max_features": 1.0,
+      "max_leaf_nodes": null,
+      "max_samples": null,
+      "min_impurity_decrease": 0.0,
+      "min_samples_leaf": 20,
+      "min_samples_split": 2,
+      "min_weight_fraction_leaf": 0.0,
+      "monotonic_cst": null,
+      "n_estimators": 32,
+      "n_jobs": 4,
+      "oob_score": false,
+      "random_state": 42,
+      "verbose": 0,
+      "warm_start": false
+    }
+  },
+  "XGBoost": {
+    "mae": 169851.09375,
+    "median_ae": 58845.31640625,
+    "mape": 0.3748812675476074,
+    "rmse": 766671.875,
+    "r2": 0.5476521253585815,
+    "mean_error": -70743.875,
+    "validation_band_radius_80": 162538.90625,
+    "validation_band_coverage": 0.800003633407364,
+    "by_status": {
+      "for_sale": {
+        "mae": 202225.703125,
+        "median_ae": 62142.5625,
+        "mape": 0.4331181049346924,
+        "rmse": 914636.0,
+        "r2": 0.5267924070358276,
+        "mean_error": -92009.609375,
+        "validation_band_radius_80": 183286.125,
+        "validation_band_coverage": 0.8000058428706023
+      },
+      "ready_to_build": {
+        "mae": 70678.53125,
+        "median_ae": 47493.6875,
+        "mape": 0.1284950077533722,
+        "rmse": 116528.53125,
+        "r2": 0.7947621941566467,
+        "mean_error": -19046.07421875,
+        "validation_band_radius_80": 100073.5625,
+        "validation_band_coverage": 0.8001636326447126
+      },
+      "sold": {
+        "mae": 118001.1953125,
+        "median_ae": 54847.0,
+        "mape": 0.2836679518222809,
+        "rmse": 428577.15625,
+        "r2": 0.6604043841362,
+        "mean_error": -36278.88671875,
+        "validation_band_radius_80": 138067.0,
+        "validation_band_coverage": 0.8000074243183548
+      }
+    },
+    "training_device": "cuda",
+    "features": [
+      "status",
+      "bed",
+      "bath",
+      "house_size",
+      "acre_lot",
+      "state",
+      "city",
+      "zip_code"
+    ],
+    "best_parameters": {
+      "objective": "reg:squarederror",
+      "base_score": null,
+      "booster": null,
+      "callbacks": null,
+      "colsample_bylevel": null,
+      "colsample_bynode": null,
+      "colsample_bytree": 0.9,
+      "device": "cuda",
+      "early_stopping_rounds": null,
+      "enable_categorical": false,
+      "eval_metric": null,
+      "feature_types": null,
+      "feature_weights": null,
+      "gamma": null,
+      "grow_policy": null,
+      "importance_type": null,
+      "interaction_constraints": null,
+      "learning_rate": 0.06,
+      "max_bin": null,
+      "max_cat_threshold": null,
+      "max_cat_to_onehot": null,
+      "max_delta_step": null,
+      "max_depth": 8,
+      "max_leaves": null,
+      "min_child_weight": 5,
+      "missing": null,
+      "monotone_constraints": null,
+      "multi_strategy": null,
+      "n_estimators": 220,
+      "n_jobs": 1,
+      "num_parallel_tree": null,
+      "random_state": 42,
+      "reg_alpha": null,
+      "reg_lambda": 8.0,
+      "sampling_method": null,
+      "scale_pos_weight": null,
+      "subsample": 0.9,
+      "tree_method": "hist",
+      "validate_parameters": null,
+      "verbosity": 0
+    }
+  }
+}

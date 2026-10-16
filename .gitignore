@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+models/*.pkl
+models/*.tmp
+scalers/
+house_data_new.csv

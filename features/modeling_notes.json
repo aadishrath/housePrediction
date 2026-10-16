@@ -1,0 +1,54 @@
+{
+  "included": [
+    {
+      "id": "status",
+      "reason": "Selects the price meaning: completed sale price or asking/list price."
+    },
+    {
+      "id": "bed",
+      "reason": "Bedroom count describes the property's layout."
+    },
+    {
+      "id": "bath",
+      "reason": "Bathroom count captures another basic size and utility signal."
+    },
+    {
+      "id": "house_size",
+      "reason": "Interior square footage is a primary property-size measure."
+    },
+    {
+      "id": "acre_lot",
+      "reason": "Parcel size adds land context; missing values are imputed."
+    },
+    {
+      "id": "state",
+      "reason": "Broad geographic differences in observed prices."
+    },
+    {
+      "id": "city",
+      "reason": "Local price variation; encoded with training-only target statistics."
+    },
+    {
+      "id": "zip_code",
+      "reason": "Fine-grained location; encoded as a category rather than a number."
+    }
+  ],
+  "excluded": [
+    {
+      "id": "brokered_by",
+      "reason": "Broker/agent identifier is not a property characteristic and can memorize records."
+    },
+    {
+      "id": "street",
+      "reason": "Street/record identifier is high-cardinality and not reliably available for user inputs."
+    },
+    {
+      "id": "prev_sold_date",
+      "reason": "Previous sale date is not the current listing/sale observation date; it is incomplete and contains invalid values."
+    },
+    {
+      "id": "price",
+      "reason": "This is the target being estimated; its meaning depends on status."
+    }
+  ]
+}

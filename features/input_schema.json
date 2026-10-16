@@ -1,0 +1,91 @@
+[
+  {
+    "id": "status",
+    "label": "Price context",
+    "type": "select",
+    "required": true,
+    "options": [
+      {
+        "value": "sold",
+        "label": "Completed sale price"
+      },
+      {
+        "value": "for_sale",
+        "label": "For-sale asking price"
+      },
+      {
+        "value": "ready_to_build",
+        "label": "Ready-to-build asking price"
+      }
+    ],
+    "help": "Choose the kind of price you want estimated. The model is trained on all three data statuses."
+  },
+  {
+    "id": "bed",
+    "label": "Bedrooms",
+    "type": "integer",
+    "min": 0,
+    "max": 30,
+    "step": 1,
+    "required": true,
+    "required_unless": "ready_to_build",
+    "help": "Whole number; optional for ready-to-build listings."
+  },
+  {
+    "id": "bath",
+    "label": "Bathrooms",
+    "type": "decimal",
+    "min": 0,
+    "max": 30,
+    "step": 0.5,
+    "required": true,
+    "required_unless": "ready_to_build",
+    "help": "Half-bath increments; optional for ready-to-build listings."
+  },
+  {
+    "id": "house_size",
+    "label": "Living area (sq ft)",
+    "type": "integer",
+    "min": 1,
+    "max": 50000,
+    "step": 1,
+    "required": true,
+    "required_unless": "ready_to_build",
+    "help": "Finished interior area; optional for ready-to-build listings."
+  },
+  {
+    "id": "acre_lot",
+    "label": "Lot size (acres)",
+    "type": "decimal",
+    "min": 0,
+    "max": 1000,
+    "step": 0.01,
+    "required": false,
+    "help": "Optional. Leave blank if unknown."
+  },
+  {
+    "id": "state",
+    "label": "State",
+    "type": "text",
+    "min_length": 2,
+    "max_length": 2,
+    "required": true,
+    "help": "Two-letter state abbreviation, such as CA."
+  },
+  {
+    "id": "city",
+    "label": "City",
+    "type": "text",
+    "min_length": 1,
+    "max_length": 100,
+    "required": true
+  },
+  {
+    "id": "zip_code",
+    "label": "ZIP code",
+    "type": "text",
+    "pattern": "^\\d{5}$",
+    "required": true,
+    "help": "Enter a five-digit ZIP code."
+  }
+]
