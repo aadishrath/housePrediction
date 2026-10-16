@@ -24,7 +24,7 @@ from xgboost import XGBRegressor
 from model_components import TorchMLPRegressor, inverse_log_price
 
 ROOT = Path(__file__).resolve().parent
-DATA_PATH = ROOT / "house_data_new.csv"
+DATA_PATH = ROOT / "house_data.csv"
 MODEL_DIR = ROOT / "models"
 FEATURE_DIR = ROOT / "features"
 TARGET = "price"

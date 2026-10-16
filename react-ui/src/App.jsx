@@ -151,9 +151,10 @@ function App() {
             Estimate a home’s value <span>from its details.</span>
           </h1>
           <p className="hero-copy">
-            Trained on {metadata?.rows_used?.toLocaleString() || "millions of"} valid
-            sale and listing records across the United States. Enter a home’s
-            characteristics and choose whether you want a completed-sale or asking-price estimate.
+            Trained on {metadata?.rows_used?.toLocaleString() || "millions of"}{" "}
+            valid sale and listing records across the United States. Enter a
+            home’s characteristics and choose whether you want a completed-sale
+            or asking-price estimate.
           </p>
         </div>
       </section>
@@ -175,7 +176,7 @@ function App() {
             <div>
               <p className="eyebrow">PREDICTION MODEL</p>
               <p className="muted">
-                Compared on a held-out sample. {" "}
+                Compared on a held-out sample.{" "}
                 {models[0]?.metrics?.mae != null &&
                   `Lowest holdout MAE: ${money(models[0].metrics.mae)}.`}
               </p>
@@ -238,7 +239,8 @@ function App() {
                   price context, then enter the property and location details.
                 </p>
                 <div className="context-note">
-                  <span className="status-dot" /> Trained across all included records
+                  <span className="status-dot" /> Trained across all included
+                  records
                 </div>
               </aside>
             </form>
@@ -249,7 +251,11 @@ function App() {
               <div className="section-heading">
                 <div>
                   <p className="eyebrow">STATUS-CONDITIONED ESTIMATE</p>
-                  <h2>{prediction.price_context === "sold" ? "Estimated completed-sale price" : "Estimated asking price"}</h2>
+                  <h2>
+                    {prediction.price_context === "sold"
+                      ? "Estimated completed-sale price"
+                      : "Estimated asking price"}
+                  </h2>
                 </div>
               </div>
               <div className="results-grid">
@@ -270,9 +276,9 @@ function App() {
               </div>
               <p className="disclaimer">
                 The range reflects an absolute error band measured on a random
-                held-out sample from this dataset. The source does not provide
-                a reliable current listing/sale observation date, so estimates
-                are not current-market appraisals or offers.
+                held-out sample from this dataset. The source does not provide a
+                reliable current listing/sale observation date, so estimates are
+                not current-market appraisals or offers.
               </p>
             </section>
           )}

@@ -14,7 +14,8 @@ The form includes **Price context** and the selected status is a model feature. 
 
 ## Data and feature choices
 
-Place the Kaggle source file at `house_data_new.csv` in the repository root. The 179 MB dataset is intentionally local and ignored by Git; the app does not fetch millions of records from an API on every request.
+The source file `house_data.csv` should be placed in the repository root (179 MB dataset added in gitignore, hence not uploaded); the app does not fetch millions of records from an API on every request.
+Dataset can be downloaded from [kaggle dataset](https://www.kaggle.com/datasets/ahmedshahriarsakib/usa-real-estate-dataset).
 
 Raw columns: `brokered_by`, `status`, `price`, `bed`, `bath`, `acre_lot`, `street`, `city`, `state`, `zip_code`, `house_size`, and `prev_sold_date`.
 
@@ -46,7 +47,7 @@ Reported metrics include R², MAE, median absolute error, RMSE, MAPE, mean error
 
 ## Project structure
 
-- `house_data_new.csv` — local training dataset (ignored by Git)
+- `house_data.csv` — local training dataset (ignored by Git)
 - `train_models.py`, `model_components.py` — quality filtering, preprocessing, six model candidates, evaluation, and the serializable neural-network estimator
 - `app.py` — Flask API, input validation, and inference
 - `features/input_schema.json` — generated UI controls and validation rules

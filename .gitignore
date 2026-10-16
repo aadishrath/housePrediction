@@ -5,4 +5,4 @@ venv/
 models/*.pkl
 models/*.tmp
 scalers/
-house_data_new.csv
+house_data.csv

@@ -12,11 +12,17 @@ function DynamicForm({ features, formData, errors, onInputChange }) {
               required={field.required !== false}
               aria-label={field.label}
               aria-invalid={Boolean(errors[field.id])}
-              aria-describedby={errors[field.id] ? `${field.id}-error` : undefined}
+              aria-describedby={
+                errors[field.id] ? `${field.id}-error` : undefined
+              }
             >
-              <option value="" disabled>Choose {field.label.toLowerCase()}</option>
+              <option value="" disabled>
+                Choose {field.label.toLowerCase()}
+              </option>
               {field.options.map((option) => (
-                <option key={option.value} value={option.value}>{option.label}</option>
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
             </select>
           ) : field.type === "text" ? (
@@ -29,7 +35,13 @@ function DynamicForm({ features, formData, errors, onInputChange }) {
               required={field.required !== false}
               aria-label={field.label}
               aria-invalid={Boolean(errors[field.id])}
-              aria-describedby={errors[field.id] ? `${field.id}-error` : field.help ? `${field.id}-help` : undefined}
+              aria-describedby={
+                errors[field.id]
+                  ? `${field.id}-error`
+                  : field.help
+                    ? `${field.id}-help`
+                    : undefined
+              }
             />
           ) : (
             <input
@@ -40,14 +52,31 @@ function DynamicForm({ features, formData, errors, onInputChange }) {
               step={field.step}
               value={formData[field.id] ?? ""}
               onChange={(event) => onInputChange(field.id, event.target.value)}
-              required={field.required !== false && !(field.required_unless && status === field.required_unless)}
+              required={
+                field.required !== false &&
+                !(field.required_unless && status === field.required_unless)
+              }
               aria-label={field.label}
               aria-invalid={Boolean(errors[field.id])}
-              aria-describedby={errors[field.id] ? `${field.id}-error` : field.help ? `${field.id}-help` : undefined}
+              aria-describedby={
+                errors[field.id]
+                  ? `${field.id}-error`
+                  : field.help
+                    ? `${field.id}-help`
+                    : undefined
+              }
             />
           )}
           {field.help && <small id={`${field.id}-help`}>{field.help}</small>}
-          {errors[field.id] && <small className="field-error" id={`${field.id}-error`} role="alert">{errors[field.id]}</small>}
+          {errors[field.id] && (
+            <small
+              className="field-error"
+              id={`${field.id}-error`}
+              role="alert"
+            >
+              {errors[field.id]}
+            </small>
+          )}
         </label>
       ))}
     </div>
