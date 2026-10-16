@@ -1,22 +1,15 @@
-import React, { Component } from 'react';
-
-// Dropdown component to select prediction model
-class ModelSelector extends Component {
-  render() {
-    const { models, selectedModel, onChange } = this.props;
-    return (
-      <div>
-        <label>Select Model:</label>
-        <select value={selectedModel} onChange={onChange}>
-          {models.map(model => (
-            <option key={model} value={model.replace(/\s+/g, '_').toLowerCase()}>
-              {model}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
+function ModelSelector({ models, selectedModel, onChange }) {
+  return (
+    <label className="model-select">
+      <span className="sr-only">Select prediction model</span>
+      <select value={selectedModel} onChange={onChange}>
+        {models.map((model) => (
+          <option key={model.id} value={model.id}>{model.best ? "★ " : ""}{model.label}{model.metrics?.mae != null ? ` · $${Math.round(model.metrics.mae / 1000)}k MAE` : ""}</option>
+        ))}
+      </select>
+      <span className="select-chevron" aria-hidden="true">⌄</span>
+    </label>
+  );
 }
 
 export default ModelSelector;

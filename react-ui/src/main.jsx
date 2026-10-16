@@ -1,28 +1,23 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import './index.css';
-import App from './App.jsx';
-import About from "./components/About";
-import homeIcon from './assets/home.png';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, NavLink, Route, Routes } from "react-router-dom";
+import "./index.css";
+import "./App.css";
+import App from "./App.jsx";
+import About from "./components/About.jsx";
 
-const root = createRoot(document.getElementById('root'));
-
-root.render(
-  <>
-    <Router>
-      <div className="top-bar">
-        <Link to="/" className="nav-button">
-          <img src={homeIcon} alt="Home" style={{ width: '20px', marginRight: '8px', verticalAlign: 'middle' }} />
-          Home
-        </Link>
-        <Link to="/about" className="nav-button">About</Link>
-      </div>
-
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </Router>
-  </>,
-)
+createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <header className="top-bar">
+      <NavLink to="/" className="brand-link"><span className="brand-icon" aria-hidden="true">⌂</span> AdiReality</NavLink>
+      <nav aria-label="Main navigation">
+        <NavLink to="/" end className={({ isActive }) => `nav-button${isActive ? " active" : ""}`}>Estimate</NavLink>
+        <NavLink to="/about" className={({ isActive }) => `nav-button${isActive ? " active" : ""}`}>About</NavLink>
+      </nav>
+    </header>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/about" element={<About />} />
+    </Routes>
+  </BrowserRouter>,
+);

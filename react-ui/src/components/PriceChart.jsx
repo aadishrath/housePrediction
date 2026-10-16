@@ -1,56 +1,22 @@
-import React, { Component } from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, LineElement, PointElement, LineController, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
+import { useMemo } from "react";
 
-// Register required components
-ChartJS.register(LineElement, PointElement, LineController, CategoryScale, LinearScale, Title, Tooltip, Legend);
+function money(value) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
+}
 
-
-// Line chart comparing predicted price with similar house prices
-class PriceChart extends Component {
-  render() {
-    const { predictedPrice, similarPrices } = this.props;
-    const data = {
-      labels: similarPrices.map((_, i) => `House ${i + 1}`),
-      datasets: [
-        {
-          label: 'Similar House Prices',
-          data: similarPrices,
-          borderColor: 'blue',
-          fill: false
-        },
-        {
-          label: 'Your Prediction',
-          data: Array(similarPrices.length).fill(predictedPrice),
-          borderColor: 'red',
-          borderDash: [5, 5],
-          fill: false
-        }
-      ]
-    };
-
-    const options = {
-      responsive: true,
-      scales: {
-        x: {
-          type: 'category',
-          title: {
-            display: true,
-            text: 'Similar Houses'
-          }
-        },
-        y: {
-          type: 'linear',
-          title: {
-            display: true,
-            text: 'Price ($)'
-          }
-        }
-      }
-    };
-
-    return <Line data={data} options={options} />;
-  }
+function PriceChart({ predictedPrice, low, high }) {
+  const scale = useMemo(() => Math.max(high, 1), [high]);
+  return (
+    <div className="chart-inner">
+      <p className="eyebrow">MODEL OUTPUT</p>
+      <h3>Estimate and validation range</h3>
+      <div className="estimate-range-visual" role="img" aria-label={`Estimate ${money(predictedPrice)}; validation range ${money(low)} to ${money(high)}`}>
+        <div className="range-track"><span className="range-fill" style={{ left: `${(low / scale) * 100}%`, width: `${Math.max(0, ((high - low) / scale) * 100)}%` }} /><span className="range-marker" style={{ left: `${(predictedPrice / scale) * 100}%` }} /></div>
+        <div className="range-endpoints"><span>{money(low)}</span><strong>{money(predictedPrice)}</strong><span>{money(high)}</span></div>
+      </div>
+      <p className="muted chart-caption">This band comes from held-out records for the selected model.</p>
+    </div>
+  );
 }
 
 export default PriceChart;
